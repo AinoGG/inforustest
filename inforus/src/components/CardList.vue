@@ -2,19 +2,27 @@
     <div class="card-list__wrapper">
         <aside class="aside-menu">
             <p>searching navigation</p>
-            <input class="input-text" type="text" placeholder="input country name.." @input="inputCountry(state.inputValue)"
-                v-model="state.inputValue">
+            <input class="input-text" type="text" placeholder="input country name.."
+                @input="inputCountry(state.inputValue)" v-model="state.inputValue">
 
             <div class="custom-slider">
+                <p>Population</p>
                 <input type="range" min="0" max="1500000000" class="slider" v-model="state.rangeValue"
                     @change="rangeChange" />
                 <p>{{ state.rangeValue }}</p>
             </div>
+            <div class="custom-slider area">
+                <p>Area</p>
+                <input type="range" min="0" max="17098242" class="slider" v-model="state.areaValue"
+                    @change="rangeChangeArea" />
+                <p>{{ state.areaValue }}</p>
+            </div>
         </aside>
         <div class="content-box">
             <ul class="card-list">
-                <li class="card-list__item" v-for="(item, i) in store.countryList" :key="i" v-show="i < state.showIndex"
-                    :style="{ background: `#${item.flag.split('/').pop()}` }" @click="goToCountry(item.name, item.id)">
+                <li class="card-list__item" v-for="(item, i) in store.countryList" :key="i"
+                    v-show="i < state.showIndex && item.population > state.rangeValue && item.land_area > state.areaValue"
+                    :style="{ background: `#${item.flag.split('/').pop()}` }" @click="goToCountry(item.id)">
                     <div class="card-list__item-box">
                         <h2 class="card-list__item-title">
                             {{ item.name }}
@@ -50,7 +58,8 @@ const state = reactive({
     inputValue: '',
     showIndex: 20,
     loading: false,
-    rangeValue: 0
+    rangeValue: 0,
+    areaValue: 0
 })
 
 function createCardList() {
@@ -58,13 +67,23 @@ function createCardList() {
     store.fetchCountries()
 }
 
-function goToCountry(link, id) {
-    router.push(`/${link}`)
+function goToCountry(id) {
+    router.push(`/${id}`)
     store.fetchCountry(id)
-    console.log(link)
 }
 function rangeChange() {
-    console.log(state.rangeValue)
+    if (state.rangeValue > 0) {
+        state.showIndex = store.countryList.length
+    } else {
+        state.showIndex = 20
+    }
+}
+function rangeChangeArea() {
+    if (state.areaValue > 0) {
+        state.showIndex = store.countryList.length
+    } else {
+        state.showIndex = 20
+    }
 }
 
 function inputCountry(name) {
@@ -83,7 +102,6 @@ function scrollView() {
             state.loading = true
             setTimeout(() => {
                 state.showIndex = state.showIndex + 20
-                console.log(document.querySelector('.card-list').scrollHeight)
                 state.loading = false
             }, 1500)
 
@@ -145,6 +163,7 @@ onMounted(() => {
         /* pointer-events: none; */
         border-radius: 999px;
         z-index: 0;
+        width: 90%;
     }
 
     /* ::before element to replace the slider track */
@@ -162,7 +181,7 @@ onMounted(() => {
     /* `::-webkit-slider-runnable-track` targets the track (background) of a range slider in chrome and safari browsers. */
     .custom-slider input[type="range"]::-webkit-slider-runnable-track {
         appearance: none;
-        background: #005a3c;
+        background: #00505a;
         height: var(--trackHeight);
         border-radius: 999px;
     }
@@ -170,7 +189,7 @@ onMounted(() => {
     /* `::-moz-range-track` targets the track (background) of a range slider in Mozilla Firefox. */
     .custom-slider input[type="range"]::-moz-range-track {
         appearance: none;
-        background: #005a3c;
+        background: #00505a;
         height: var(--trackHeight);
         border-radius: 999px;
     }
@@ -182,7 +201,7 @@ onMounted(() => {
         width: var(--thumbRadius);
         height: var(--thumbRadius);
         /* margin-top: calc((var(--trackHeight) - var(--thumbRadius)) / 2); */
-        background: #00bd7e;
+        background: #00b7bd;
         border-radius: 999px;
         pointer-events: all;
         appearance: none;
@@ -196,7 +215,7 @@ onMounted(() => {
         /* ... */
     }
 
-    
+
 }
 
 .content-box {
@@ -221,6 +240,13 @@ onMounted(() => {
         box-shadow: 2px 4px 3px 1px #e3e3e3;
         color: #fff;
         position: relative;
+        transition: all .15s ease-in-out;
+        &:hover {
+            box-shadow: 2px 4px 3px 1px #2e9458;
+            &::after {
+                background: rgba($color: #000000, $alpha: .2);
+            }
+        }
 
         h2 {
             font-size: 20px;

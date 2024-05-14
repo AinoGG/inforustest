@@ -6,9 +6,7 @@
 
 <script setup>
 import { useCardsStore } from './stores/cards'
-import CardList from '@/components/CardList.vue'
 
-const store = useCardsStore()
 </script>
 
 

@@ -19,19 +19,16 @@ export const useCardsStore = defineStore('cards', {
     actions: {
         async fetchCountries() {
             await getCountries().then((res) => {
-                console.log(res)
                 this.countryList = res.data
             })
         },
         async fetchCountry(id) {
             await getCountry(id).then((res) => {
-                console.log(res)
                 this.chooseCountry = res.data
             })
         },
         async fetchCountrySearch(name) {
             await searchCountry(name).then((res) => {
-                console.log(res)
                 this.countryList = res.data
             })
         },
