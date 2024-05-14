@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <CardList />
+    <RouterView/>
   </div>
 </template>
 
@@ -19,7 +19,10 @@ body {
   font-family: sans-serif;
 }
 
-h1,h2,h3{
+h1,
+h2,
+h3,
+p {
   margin: 0;
   padding: 0;
 }
