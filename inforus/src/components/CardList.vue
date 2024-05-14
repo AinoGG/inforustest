@@ -8,13 +8,13 @@
             <div class="custom-slider">
                 <p>Population</p>
                 <input type="range" min="0" max="1500000000" class="slider" v-model="state.rangeValue"
-                    @change="rangeChange" />
+                    @input="rangeChange" />
                 <p>{{ state.rangeValue }}</p>
             </div>
             <div class="custom-slider area">
                 <p>Area</p>
                 <input type="range" min="0" max="17098242" class="slider" v-model="state.areaValue"
-                    @change="rangeChangeArea" />
+                    @input="rangeChangeArea" />
                 <p>{{ state.areaValue }}</p>
             </div>
         </aside>
@@ -107,7 +107,6 @@ function scrollView() {
 
         }
     })
-    // document.querySelector('.card-list')
 }
 
 onMounted(() => {
